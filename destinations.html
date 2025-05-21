@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destinations - VirtuTrip</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    /* Add border to the body frame */
+    body {
+      border: 10px solid #1e3a8a;
+    }
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 22px;
+      cursor: pointer;
+      z-index: 1101;
+      transition: transform 0.3s ease;
+    }
+
+    .hamburger div {
+      width: 100%;
+      height: 4px;
+      background-color: white;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 50%;
+      height: 100vh;
+      background-color: #1e3a8a;
+      padding: 2rem;
+      z-index: 1000;
+      transition: right 0.4s ease-in-out;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .grid-menu {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .nav-menu a {
+      color: white;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .nav-menu a:hover {
+      background-color: #00b4d8;
+      transform: scale(1.05);
+    }
+
+
+    /* Header */
+    header {
+      background: #1e3a8a;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Search Bar */
+    .search-container {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .search-container input {
+      padding: 0.8rem;
+      font-size: 1rem;
+      width: 50%;
+      max-width: 400px;
+      border: 2px solid #0077b6;
+      border-radius: 5px;
+    }
+
+    .search-container button {
+      padding: 0.8rem 1.2rem;
+      margin-left: 10px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .search-container button:hover {
+      background-color: #005f87;
+    }
+
+    /* Destinations Section */
+    .destinations {
+      padding: 2rem;
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .destinations h2 {
+      font-size: 2rem;
+      color: #0077b6;
+    }
+
+    /* Destination Cards with border and same size */
+    .destination-card {
+      display: inline-block;
+      width: 30%;
+      margin: 1rem;
+      text-align: center;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 2px solid #0077b6;  /* Border added */
+      height: 350px; /* Set height for uniformity */
+      box-sizing: border-box; /* Ensure padding is included in height */
+      transition: transform 0.3s ease;
+    }
+
+    .destination-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .destination-card img {
+      width: 100%;
+      height: 180px;  /* Set height for consistency */
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .destination-card h3 {
+      font-size: 1.5rem;
+      color: #0077b6;
+      margin: 10px 0;
+    }
+
+    .destination-card p {
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    /* Horizontal Image Flow - Continuous Scrolling Effect */
+    .horizontal-images {
+      display: flex;
+      overflow: hidden;
+      padding: 2rem 0;
+      margin: 0 2rem;
+    }
+
+    .horizontal-images img {
+      width: 250px;
+      height: 150px;
+      object-fit: cover;
+      margin-right: 1rem;
+      border-radius: 8px;
+    }
+
+    /* Continuous scrolling effect */
+    .horizontal-images-container {
+      display: flex;
+      animation: marquee 20s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #1e3a8a;
+      color: white;
+    }
+
+    footer p {
+      margin: 0;
+    }
+
+    /* Scroll to Top Button */
+    #topBtn {
+      display: none;
+      position: fixed;
+      bottom: 40px;
+      right: 30px;
+      z-index: 99;
+      font-size: 18px;
+      border: none;
+      outline: none;
+      background-color: #0077b6;
+      color: white;
+      cursor: pointer;
+      padding: 12px 16px;
+      border-radius: 5px;
+    }
+
+    #topBtn:hover {
+      background-color: #005f87;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .destination-card {
+        width: 100%;
+        margin: 1rem 0;
+      }
+
+      .destinations {
+        padding: 1rem;
+      }
+
+      .destinations h2 {
+        font-size: 1.8rem;
+      }
+
+      .destination-card h3 {
+        font-size: 1.2rem;
+      }
+
+      .destination-card p {
+        font-size: 1rem;
+      }
+
+      .search-container input {
+        width: 80%;
+      }
+
+      .horizontal-images {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+    <header>
+        <h1>VirtuTrip Dashboard</h1>
+        <div class="hamburger" onclick="toggleMenu()">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <nav class="nav-menu" id="navMenu">
+            <div class="grid-menu">
+            <a href="index.html">Home</a>
+            <a href="register.html">Register</a>
+            <a href="login.html">Login</a>
+            <a href="destinations.html">Destinations</a>
+            <a href="trip-planner.html">Trip Planner</a>
+            <a href="virtual-tours.html">Virtual Tours</a>
+            <a href="cultural-guides.html">Cultural Guides</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="testimonials.html">Feedbacks</a>
+            <a href="blog.html">Blog</a>
+            <a href="newsletter.html">Newsletter</a>
+            </div>
+        </nav>
+      </header>
+
+  <!-- Search Bar Section -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search for a destination..." onkeyup="filterDestinations()">
+    <button onclick="searchDestinations()">Search</button>
+  </div>
+
+  <!-- Horizontal Image Flow Section -->
+  <section class="horizontal-images">
+    <div class="horizontal-images-container">
+      <img src="jaipur.jpg" alt="Jaipur">
+      <img src="kerala.jpg" alt="Kerala">
+      <img src="goa.jpg" alt="Goa">
+      <img src="jodhpur.jpg" alt="Jodhpur">
+      <img src="hyderabad.jpg" alt="Hyderabad">
+      <img src="agra.jpg" alt="Agra">
+      <!-- Duplicate the images to create a seamless scrolling effect -->
+      <img src="jaipur.jpg" alt="Jaipur">
+      <img src="kerala.jpg" alt="Kerala">
+      <img src="goa.jpg" alt="Goa">
+      <img src="jodhpur.jpg" alt="Jodhpur">
+      <img src="hyderabad.jpg" alt="Hyderabad">
+      <img src="agra.jpg" alt="Agra">
+    </div>
+  </section>
+
+  <!-- Destinations Section -->
+  <section class="destinations">
+    <h2>Top Destinations</h2>
+
+    <a href="Jaipur.html" class="destination-link" style="text-decoration: none; color: inherit;">
+      <div class="destination-card">
+        <img src="jaipur.jpg" alt="Jaipur">
+        <h3>Jaipur, India</h3>
+        <p>Experience the royal heritage of the Pink City.</p>
+      </div>
+    </a>
+
+    <a href="Kerala.html" class="destination-link" style="text-decoration: none; color: inherit;">
+      <div class="destination-card">
+        <img src="kerala.jpg" alt="Kerala">
+        <h3>Kerala, India</h3>
+        <p>Relax in the tranquil backwaters and lush landscapes.</p>
+      </div>
+    </a>
+
+    <a href="Goa.html" class="destination-link" style="text-decoration: none; color: inherit;">
+      <div class="destination-card">
+        <img src="goa.jpg" alt="Goa">
+        <h3>Goa, India</h3>
+        <p>Enjoy the vibrant beaches and Portuguese heritage.</p>
+      </div>
+    </a>
+
+    <a href="Jodhpur.html" class="destination-link" style="text-decoration: none; color: inherit;">
+      <div class="destination-card">
+        <img src="jodhpur.jpg" alt="Jodhpur">
+        <h3>Jodhpur, India</h3>
+        <p>Discover the Blue City with its majestic forts.</p>
+      </div>
+    </a>
+
+    <a href="Hyderabad.html" class="destination-link" style="text-decoration: none; color: inherit;">
+      <div class="destination-card">
+        <img src="hyderabad.jpg" alt="Hyderabad">
+        <h3>Hyderabad, India</h3>
+        <p>Explore the rich history and biryani culture.</p>
+      </div>
+    </a>
+
+    <a href="Agra.html" class="destination-link" style="text-decoration: none; color: inherit;">
+      <div class="destination-card">
+        <img src="agra.jpg" alt="Agra">
+        <h3>Agra, India</h3>
+        <p>Marvel at the iconic Taj Mahal and Mughal architecture.</p>
+      </div>
+    </a>
+
+  </section>
+
+  <!-- Scroll to Top Button -->
+  <button id="topBtn" title="Go to top">↑</button>
+
+  <footer>
+    <p>&copy; 2025 VirtuTrip</p>
+  </footer>
+
+  <script>
+      function toggleMenu() {
+      document.getElementById("navMenu").classList.toggle("active");
+    }
+    // Welcome message on load
+    window.onload = function() {
+    };
+
+    // Scroll to top functionality
+    window.onscroll = function() {
+      const topBtn = document.getElementById("topBtn");
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        topBtn.style.display = "block";
+      } else {
+        topBtn.style.display = "none";
+      }
+    };
+
+    document.getElementById("topBtn").onclick = function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Log destination click
+    document.querySelectorAll('.destination-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const title = this.querySelector('h3').innerText;
+        console.log("User clicked on destination:", title);
+      });
+    });
+
+    // Filter destinations
+    function filterDestinations() {
+      const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+      const destinations = document.querySelectorAll(".destination-card");
+
+      destinations.forEach(destination => {
+        const title = destination.querySelector("h3").textContent.toLowerCase();
+        if (title.includes(searchQuery)) {
+          destination.style.display = "inline-block";
+        } else {
+          destination.style.display = "none";
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
